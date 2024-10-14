@@ -1,0 +1,78 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvCustomerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên khách hàng"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvCustomerAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Địa chỉ khách hàng"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvElectricUsage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số điện sử dụng"
+            android:textSize="16sp" />
+
+        <!-- Thêm TextView cho Tháng/Năm -->
+        <TextView
+            android:id="@+id/tvBillingMonthYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tháng/Năm"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/tvFinalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Final Price: 0 VND"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="90dp"
+                android:layout_height="36dp"
+                android:text="DELETE"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#B49701"
+                android:paddingStart="12dp"
+                />
+
+            <Button
+                android:id="@+id/btnEdit"
+                android:layout_width="80dp"
+                android:layout_height="36dp"
+                android:backgroundTint="#B49701"
+                android:text="EDIT"
+                android:textColor="@android:color/white" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

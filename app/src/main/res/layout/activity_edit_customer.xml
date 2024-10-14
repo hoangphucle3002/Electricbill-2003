@@ -1,0 +1,144 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#B49701"
+            app:titleTextColor="@android:color/white"
+            android:title="Edit Customer"
+            android:elevation="4dp"
+            app:navigationIcon="@drawable/ic_arrow_back" />
+
+        <!-- Customer Name Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Customer Name:"
+            android:textStyle="bold"
+            android:textSize="14sp" />
+
+        <!-- Customer Name Input -->
+        <EditText
+            android:id="@+id/etCustomerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter customer name"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp" />
+
+        <!-- Customer Address Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Customer Address:"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp" />
+
+        <!-- Customer Address Input -->
+        <EditText
+            android:id="@+id/etCustomerAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter customer address"
+            android:padding="12dp"
+            android:textSize="16sp" />
+
+        <!-- Electric Usage Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Electric Usage (kWh):"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp" />
+
+        <!-- Electric Usage Input -->
+        <EditText
+            android:id="@+id/etElectricUsage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter electric usage"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp" />
+
+        <!-- User Type Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Customer Type:"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp" />
+
+        <!-- User Type Spinner -->
+        <Spinner
+            android:id="@+id/spinnerUserType"
+            android:layout_width="match_parent"
+            android:entries="@array/user_type_array"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:spinnerMode="dropdown" />
+
+        <!-- Billing Month/Year Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Billing Month/Year:"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp" />
+
+        <!-- Billing Month/Year Display -->
+        <TextView
+            android:id="@+id/tvBillingMonthYear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:layout_marginTop="8dp"
+            android:background="#EEE" />
+
+        <!-- Select Month/Year Button -->
+        <Button
+            android:id="@+id/btnSelectMonthYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#B49701"
+            android:textColor="@android:color/white"
+            android:text="Select Month/Year"
+            android:padding="12dp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:elevation="4dp" />
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btnSaveCustomer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#B49701"
+            android:textColor="@android:color/white"
+            android:text="Save"
+            android:padding="16dp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:elevation="4dp" />
+
+    </LinearLayout>
+</ScrollView>

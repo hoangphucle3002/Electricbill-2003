@@ -1,0 +1,6 @@
+<resources>
+    <string-array name="user_type">
+        <item>Private</item>
+        <item>Business</item>
+    </string-array>
+</resources>

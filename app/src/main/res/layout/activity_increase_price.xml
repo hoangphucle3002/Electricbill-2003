@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#B49701"
+        app:titleTextColor="@android:color/white"
+        android:title="Increase Price"
+        app:navigationIcon="@drawable/ic_arrow_back" />
+
+    <!-- Label cho loại người dùng -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select User Type"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Spinner để chọn loại người dùng (Private hoặc Business) -->
+    <Spinner
+        android:id="@+id/spinnerUserType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/user_type_array"
+        android:layout_marginTop="8dp" />
+
+    <!-- Label cho số tiền tăng -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Increase Amount"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp" />
+
+    <!-- EditText để nhập số tiền muốn tăng -->
+    <EditText
+        android:id="@+id/etIncreaseAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter increase amount"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/edittext_background"/> <!-- Tùy chỉnh background của EditText -->
+
+    <!-- Button để nhấn tăng giá -->
+    <Button
+        android:id="@+id/btnIncreasePrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#B49701"
+        android:textColor="@android:color/white"
+        android:text="Increase Electric Unit Price"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        android:elevation="4dp" />
+
+</LinearLayout>

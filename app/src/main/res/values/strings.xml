@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Electric</string>
+
+    <!-- Define user type array for spinner -->
+    <string-array name="user_type_array">
+        <item>Private</item>
+        <item>Business</item>
+    </string-array>
+</resources>
