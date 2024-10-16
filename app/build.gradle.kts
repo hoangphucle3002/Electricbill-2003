@@ -40,6 +40,7 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.3.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation(libs.lifecycle.process)
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

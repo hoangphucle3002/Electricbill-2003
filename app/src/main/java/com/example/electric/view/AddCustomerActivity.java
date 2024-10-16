@@ -108,8 +108,20 @@ public class AddCustomerActivity extends AppCompatActivity {
 
         Customer customer = new Customer(0, name, yyyymm, address, usage, userTypeId);
         customerController.addCustomer(customer);
+
+        // Thông báo thêm thành công và xóa nội dung các trường để tiếp tục thêm
         Toast.makeText(this, "Customer added successfully", Toast.LENGTH_SHORT).show();
-        finish();
+
+        // Reset các trường sau khi thêm
+        resetInputFields();
+    }
+
+    private void resetInputFields() {
+        etCustomerName.setText("");
+        etCustomerAddress.setText("");
+        etElectricUsage.setText("");
+        btnPickDate.setText("Select Month/Year");
+        spinnerUserType.setSelection(0); // Đặt lại spinner về loại "Private"
     }
 
     private boolean validateInputs(String name, String address, String usageText, String selectedUserType) {

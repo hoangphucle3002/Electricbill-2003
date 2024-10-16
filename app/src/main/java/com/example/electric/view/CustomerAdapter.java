@@ -53,14 +53,26 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         // Bind customer data to TextViews
         holder.tvCustomerName.setText("Name: " + customer.getName());
         holder.tvCustomerAddress.setText("Address: " + customer.getAddress());
-        holder.tvElectricUsage.setText("Electric Usage: " + customer.getElectricUsage() + " kWh");
-        holder.tvBillingMonthYear.setText("Billing Month: " + customer.getYyyymm());
+
+        // Format Electric Usage without .0
+        DecimalFormat dfUsage = new DecimalFormat("#,###");
+        String formattedElectricUsage = dfUsage.format(customer.getElectricUsage());
+        holder.tvElectricUsage.setText("Electric Usage: " + formattedElectricUsage + " kWh");
+
+        // Format Billing Month as "MM/YYYY"
+        int yyyymm = customer.getYyyymm();
+        int year = yyyymm / 100;
+        int month = yyyymm % 100;
+        String formattedBillingMonthYear = String.format("%02d/%d", month, year);
+        holder.tvBillingMonthYear.setText("Billing Month: " + formattedBillingMonthYear);
 
         // Format final price
         double finalPrice = calculateFinalPrice(customer);
-        BigDecimal finalPriceBigDecimal = new BigDecimal(finalPrice);
-        String finalPriceString = finalPriceBigDecimal.toPlainString();
-        holder.tvFinalPrice.setText("Final Price: " + finalPriceString + " VND");
+
+        // Sử dụng DecimalFormat để định dạng số tiền
+        DecimalFormat dfPrice = new DecimalFormat("#,###");
+        String formattedPrice = dfPrice.format(finalPrice);
+        holder.tvFinalPrice.setText("Price: " + formattedPrice + " VND");
 
         // Handle "Edit" button click
         holder.btnEdit.setOnClickListener(v -> {
@@ -86,18 +98,21 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
 
         if (showElectricUsage) {
             holder.tvElectricUsage.setVisibility(View.VISIBLE);
-            holder.tvElectricUsage.setText("Electric Usage: " + customer.getElectricUsage() + " kWh");
+            holder.tvElectricUsage.setText("Electric Usage: " + formattedElectricUsage + " kWh");
         } else {
             holder.tvElectricUsage.setVisibility(View.GONE);
         }
 
         if (showPrice) {
             holder.tvFinalPrice.setVisibility(View.VISIBLE);
-            holder.tvFinalPrice.setText("Price: " + finalPrice );
+            holder.tvFinalPrice.setText("Price: " + formattedPrice + " VND");
         } else {
             holder.tvFinalPrice.setVisibility(View.GONE);
         }
     }
+
+
+
 
     @Override
     public int getItemCount() {

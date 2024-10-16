@@ -1,7 +1,10 @@
 package com.example.electric.view;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioFocusRequest;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.electric.R;
 import com.example.electric.model.DatabaseHelper;
+import com.example.electric.service.MusicService;
 
 import java.util.Calendar;
 
@@ -26,6 +30,11 @@ public class CustomerEditActivity extends AppCompatActivity {
     private Button btnSaveCustomer, btnSelectMonthYear;
     private DatabaseHelper dbHelper;
     private int customerId; // ID of the customer being edited
+
+    private SharedPreferences sharedPreferences;
+    private boolean isMusicPlaying = false;
+    private AudioManager audioManager;
+    private AudioFocusRequest audioFocusRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +58,15 @@ public class CustomerEditActivity extends AppCompatActivity {
         btnSelectMonthYear = findViewById(R.id.btnSelectMonthYear);
 
         dbHelper = new DatabaseHelper(this);
+        sharedPreferences = getSharedPreferences("settings_prefs", MODE_PRIVATE);
+
+        // Music management
+        setupMusicControl();
 
         // Get visibility preferences from SharedPreferences
-        SharedPreferences preferences = getSharedPreferences("settings_prefs", MODE_PRIVATE);
-        boolean showAddress = preferences.getBoolean("show_address", true);
-        boolean showElectricUsage = preferences.getBoolean("show_electric_usage", true);
-        boolean showUserType = preferences.getBoolean("show_user_type", true);
+        boolean showAddress = sharedPreferences.getBoolean("show_address", true);
+        boolean showElectricUsage = sharedPreferences.getBoolean("show_electric_usage", true);
+        boolean showUserType = sharedPreferences.getBoolean("show_user_type", true);
 
         if (!showAddress) {
             etCustomerAddress.setVisibility(View.GONE);
@@ -100,6 +112,43 @@ public class CustomerEditActivity extends AppCompatActivity {
         });
     }
 
+    private void setupMusicControl() {
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
+        AudioManager.OnAudioFocusChangeListener afChangeListener = focusChange -> {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                // Stop music if we lose audio focus (another app playing sound)
+                stopMusic();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                // Resume music when we regain audio focus
+                if (isMusicPlaying) {
+                    startMusic();
+                }
+            }
+        };
+
+        // Request audio focus for playback
+        int result = audioManager.requestAudioFocus(afChangeListener,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED && sharedPreferences.getBoolean("playMusic", false)) {
+            startMusic();
+        }
+    }
+
+    private void startMusic() {
+        Intent intent = new Intent(this, MusicService.class);
+        startService(intent);
+        isMusicPlaying = true;
+    }
+
+    private void stopMusic() {
+        Intent intent = new Intent(this, MusicService.class);
+        stopService(intent);
+        isMusicPlaying = false;
+    }
+
     // Show month/year picker dialog
     private void showDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
@@ -113,6 +162,7 @@ public class CustomerEditActivity extends AppCompatActivity {
                     tvBillingMonthYear.setText(selectedDate);
                 },
                 year, month, calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
 
         datePickerDialog.show();
     }

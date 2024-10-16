@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         currentPage = 0;
                     }
                     viewPager2.setCurrentItem(currentPage++, true);
-                    handler.postDelayed(this, 3000); // Change image every 3 seconds
+                    handler.postDelayed(this, 2000); // Change image every 2 seconds
                 }
             }
         };

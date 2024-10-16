@@ -147,14 +147,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return unitPrice;
     }
 
-    public void increaseElectricPrice(int userTypeId, double increaseAmount) {
+    public void increaseElectricPrice(int userTypeId, double amount) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         double currentPrice = getUnitPrice(userTypeId);
-
         ContentValues values = new ContentValues();
-        values.put(COLUMN_UNIT_PRICE, currentPrice + increaseAmount);
-
+        values.put(COLUMN_UNIT_PRICE, currentPrice + amount);
         db.update(TABLE_ELECTRIC_USER_TYPE, values, COLUMN_TYPE_ID + " = ?", new String[]{String.valueOf(userTypeId)});
     }
 
