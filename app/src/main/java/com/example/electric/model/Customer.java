@@ -39,9 +39,7 @@ public class Customer {
         return yyyymm;
     }
 
-    public void setYyyymm(int yyyymm) {
-        this.yyyymm = yyyymm;
-    }
+
 
     public String getAddress() {
         return address;
@@ -55,9 +53,7 @@ public class Customer {
         return electricUsage;
     }
 
-    public void setElectricUsage(double electricUsage) {
-        this.electricUsage = electricUsage;
-    }
+
 
     public int getUserTypeId() {
         return userTypeId;

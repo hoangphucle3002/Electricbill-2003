@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Button;
 import com.example.electric.R;
-import com.example.electric.service.MusicService;
+import com.example.electric.service.Music;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
         boolean isMusicPlaying = sharedPreferences.getBoolean("isMusicPlaying", false);
         if (isMusicPlaying) {
-            startService(new Intent(MainActivity.this, MusicService.class));
+            startService(new Intent(MainActivity.this, Music.class));
         }
 
         btnSettings.setOnClickListener(v -> {

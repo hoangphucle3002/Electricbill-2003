@@ -36,7 +36,7 @@
 
         <activity android:name=".view.UpdatePrice" />
         <activity android:name=".view.Settings" />
-        <service android:name=".service.MusicService" />
+        <service android:name=".service.Music" />
 
 
     </application>

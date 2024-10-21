@@ -9,7 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.electric.R;
-import com.example.electric.service.MusicService;
+import com.example.electric.service.Music;
 
 public class Settings extends AppCompatActivity {
 
@@ -71,11 +71,11 @@ public class Settings extends AppCompatActivity {
 
             if (isChecked) {
                 // Start playing music
-                Intent intent = new Intent(Settings.this, MusicService.class);
+                Intent intent = new Intent(Settings.this, Music.class);
                 startService(intent);
             } else {
                 // Stop playing music
-                Intent intent = new Intent(Settings.this, MusicService.class);
+                Intent intent = new Intent(Settings.this, Music.class);
                 stopService(intent);
             }
         });

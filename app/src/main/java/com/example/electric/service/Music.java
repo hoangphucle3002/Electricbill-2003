@@ -5,8 +5,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.IBinder;
 import android.media.MediaPlayer;
-import android.util.Log;
-import android.media.AudioManager.OnAudioFocusChangeListener;
+
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -14,7 +13,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 import com.example.electric.R;
 
 
-public class MusicService extends Service implements LifecycleObserver {
+public class Music extends Service implements LifecycleObserver {
 
     private MediaPlayer mediaPlayer;
     private AudioManager audioManager;

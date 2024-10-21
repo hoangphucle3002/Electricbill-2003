@@ -22,7 +22,7 @@ import android.view.Gravity;
 
 import com.example.electric.R;
 import com.example.electric.model.DatabaseManage;
-import com.example.electric.service.MusicService;
+import com.example.electric.service.Music;
 
 import java.util.Calendar;
 
@@ -151,13 +151,13 @@ public class CustomerEdit extends AppCompatActivity {
     }
 
     private void startMusic() {
-        Intent intent = new Intent(this, MusicService.class);
+        Intent intent = new Intent(this, Music.class);
         startService(intent);
         isMusicPlaying = true;
     }
 
     private void stopMusic() {
-        Intent intent = new Intent(this, MusicService.class);
+        Intent intent = new Intent(this, Music.class);
         stopService(intent);
         isMusicPlaying = false;
     }
