@@ -3,17 +3,18 @@ package com.example.electric.controller;
 import android.content.Context;
 import android.database.Cursor;
 import com.example.electric.model.Customer;
-import com.example.electric.model.DatabaseHelper;
+import com.example.electric.model.DatabaseManage;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerController {
 
-    private final DatabaseHelper dbHelper;
+    private final DatabaseManage dbHelper;
 
-    // Constructor to initialize DatabaseHelper
+    // Constructor to initialize DatabaseManage
     public CustomerController(Context context) {
-        dbHelper = new DatabaseHelper(context);
+        dbHelper = new DatabaseManage(context);
     }
 
     // Method to add a customer to the database

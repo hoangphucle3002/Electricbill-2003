@@ -34,6 +34,12 @@ public class MusicService extends Service implements LifecycleObserver {
         // Initialize AudioManager
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
 
+        // Set system volume to maximum
+        audioManager.setStreamVolume(
+                AudioManager.STREAM_MUSIC,
+                audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+                0); // No flags
+
         // Request audio focus
         requestAudioFocus();
     }
@@ -71,15 +77,16 @@ public class MusicService extends Service implements LifecycleObserver {
         }
     }
 
-    // Bắt đầu phát nhạc
+    // Start playing music
     private void startMusic() {
         if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
             mediaPlayer.start();
+            mediaPlayer.setVolume(1.0f, 1.0f); // Set volume to maximum
             wasPlayingBeforeLoss = true;
         }
     }
 
-    // Dừng nhạc
+    // Stop the music
     private void stopMusic() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
@@ -87,7 +94,7 @@ public class MusicService extends Service implements LifecycleObserver {
         }
     }
 
-    // Tạm dừng nhạc
+    // Pause the music
     private void pauseMusic() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
@@ -95,13 +102,13 @@ public class MusicService extends Service implements LifecycleObserver {
         }
     }
 
-    // App đi vào background
+    // App goes to background
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void onAppBackgrounded() {
         pauseMusic();
     }
 
-    // App quay lại foreground
+    // App comes to foreground
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onAppForegrounded() {
         startMusic();

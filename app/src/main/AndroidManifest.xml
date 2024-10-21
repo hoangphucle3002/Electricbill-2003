@@ -8,9 +8,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo_uef"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo_uef"
         android:supportsRtl="true"
         android:theme="@style/Theme.Electric"
         tools:targetApi="31">
@@ -23,19 +23,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.CustomerEditActivity"></activity>
-        <!-- Khai báo AddCustomerActivity -->
+        <activity android:name=".view.CustomerEdit"></activity>
+        <!-- Khai báo AddCustomer -->
         <activity
-            android:name=".view.AddCustomerActivity"
+            android:name=".view.AddCustomer"
             android:exported="true" />
 
-        <!-- Khai báo CustomerListActivity (Danh sách khách hàng) -->
+        <!-- Khai báo CustomerList (Danh sách khách hàng) -->
         <activity
-            android:name=".view.CustomerListActivity"
+            android:name=".view.CustomerList"
             android:exported="true" />
 
-        <activity android:name=".view.IncreasePriceActivity" />
-        <activity android:name=".view.SettingsActivity" />
+        <activity android:name=".view.UpdatePrice" />
+        <activity android:name=".view.Settings" />
         <service android:name=".service.MusicService" />
 
 

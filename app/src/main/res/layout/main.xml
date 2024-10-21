@@ -1,0 +1,128 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#B49701">
+
+            <!-- TextView để hiển thị tiêu đề căn giữa -->
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="ELECTRIC MANAGEMENT"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:shadowColor="#80000000"
+                android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="4"
+                android:padding="8dp"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <!-- ViewPager hoặc Hình ảnh quảng cáo (tuỳ chọn) -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp" />
+
+        <!-- Các nút chức năng được hiển thị trên CardView -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="8dp"
+            android:elevation="4dp"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Nút Thêm khách hàng -->
+                <Button
+                    android:id="@+id/btnAddCustomer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="#B49701"
+                    android:text="Add Customer"
+                    android:textColor="@android:color/white"
+                    android:drawableLeft="@drawable/ic_add_customer"
+                    android:padding="12dp" />
+
+                <!-- Nút Xem danh sách khách hàng -->
+                <Button
+                    android:id="@+id/btnViewCustomerList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="#B49701"
+                    android:text="View Customer List"
+                    android:textColor="@android:color/white"
+                    android:drawableLeft="@drawable/ic_view_list"
+                    android:padding="12dp" />
+
+                <!-- Nút Tăng giá điện -->
+                <Button
+                    android:id="@+id/btnIncreasePrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="#B49701"
+                    android:text="Update Electric Price"
+                    android:textColor="@android:color/white"
+                    android:drawableLeft="@drawable/ic_price_increase"
+                    android:padding="12dp" />
+
+                <!-- Nút Cài đặt -->
+                <Button
+                    android:id="@+id/btnSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="#B49701"
+                    android:text="Settings"
+                    android:textColor="@android:color/white"
+                    android:drawableLeft="@drawable/ic_settings"
+                    android:padding="12dp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Dòng chú thích dưới cùng -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Have a nice day! 😀"
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="16dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="© 2024 A01E_Group3. All rights reserved"
+            android:textSize="12sp"
+            android:textColor="#CCCCCC"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"/>
+
+    </LinearLayout>
+</ScrollView>

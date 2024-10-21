@@ -19,13 +19,13 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager2 viewPager2;
     private Handler handler = new Handler(Looper.getMainLooper());
     private int currentPage = 0;
-    private int[] images = {R.drawable.image1, R.drawable.image2, R.drawable.image3, R.drawable.image4};
+    private int[] images = {R.drawable.image1, R.drawable.image2, R.drawable.image3, R.drawable.image4, R.drawable.image5};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setupToolbar();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+         setContentView(R.layout.main);
 
         // Initialize ViewPager2
         viewPager2 = findViewById(R.id.viewPager2);
@@ -50,17 +50,17 @@ public class MainActivity extends AppCompatActivity {
 
         // Set button click listeners
         btnAddCustomer.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AddCustomerActivity.class);
+            Intent intent = new Intent(MainActivity.this, AddCustomer.class);
             startActivity(intent);
         });
 
         btnViewCustomerList.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, CustomerListActivity.class);
+            Intent intent = new Intent(MainActivity.this, CustomerList.class);
             startActivity(intent);
         });
 
         btnIncreasePrice.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, IncreasePriceActivity.class);
+            Intent intent = new Intent(MainActivity.this, UpdatePrice.class);
             startActivity(intent);
         });
 
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         btnSettings.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            Intent intent = new Intent(MainActivity.this, Settings.class);
             startActivity(intent);
         });
     }

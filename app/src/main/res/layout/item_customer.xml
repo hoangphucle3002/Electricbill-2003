@@ -26,6 +26,12 @@
             android:layout_height="wrap_content"
             android:text="Địa chỉ khách hàng"
             android:textSize="16sp" />
+        <TextView
+            android:id="@+id/tvUserType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loại Khách Hàng"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tvElectricUsage"

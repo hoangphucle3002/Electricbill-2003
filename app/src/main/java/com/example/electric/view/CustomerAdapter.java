@@ -14,20 +14,20 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.electric.R;
 import com.example.electric.model.Customer;
-import com.example.electric.model.DatabaseHelper;
+import com.example.electric.model.DatabaseManage;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.text.DecimalFormat;
-import java.math.BigDecimal;
 
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.CustomerViewHolder> {
 
     private List<Customer> customerList;
     private Context context;
-    private DatabaseHelper dbHelper;
+    private DatabaseManage dbHelper;
 
-    public CustomerAdapter(List<Customer> customerList, Context context, DatabaseHelper dbHelper) {
+    public CustomerAdapter(List<Customer> customerList, Context context, DatabaseManage dbHelper) {
         this.customerList = customerList;
         this.context = context;
         this.dbHelper = dbHelper;
@@ -54,6 +54,9 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         holder.tvCustomerName.setText("Name: " + customer.getName());
         holder.tvCustomerAddress.setText("Address: " + customer.getAddress());
 
+        String userTypeText = customer.getUserTypeId() == 1 ? "Private" : customer.getUserTypeId() == 2 ? "Business" : "Unknown";
+        holder.tvUserType.setText("User Type: " + userTypeText);
+
         // Format Electric Usage without .0
         DecimalFormat dfUsage = new DecimalFormat("#,###");
         String formattedElectricUsage = dfUsage.format(customer.getElectricUsage());
@@ -76,7 +79,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
 
         // Handle "Edit" button click
         holder.btnEdit.setOnClickListener(v -> {
-            Intent intent = new Intent(context, CustomerEditActivity.class);
+            Intent intent = new Intent(context, CustomerEdit.class);
             intent.putExtra("customerId", customer.getId());
             intent.putExtra("customerName", customer.getName());
             intent.putExtra("customerAddress", customer.getAddress());
@@ -101,6 +104,13 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
             holder.tvElectricUsage.setText("Electric Usage: " + formattedElectricUsage + " kWh");
         } else {
             holder.tvElectricUsage.setVisibility(View.GONE);
+        }
+
+        if (showUserType) {
+            holder.tvUserType.setVisibility(View.VISIBLE);
+            holder.tvUserType.setText("User Type: " + userTypeText);
+        } else {
+            holder.tvUserType.setVisibility(View.GONE);
         }
 
         if (showPrice) {
@@ -147,7 +157,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
     }
 
     private double calculateFinalPrice(Customer customer) {
-        double unitPrice = customer.getUserTypeId() == 1 ? 1000 : 2000;
+        double unitPrice = dbHelper.getUnitPrice(customer.getUserTypeId());
         return customer.getElectricUsage() * unitPrice;
     }
 
@@ -158,13 +168,14 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
     }
 
     public static class CustomerViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCustomerName, tvCustomerAddress, tvElectricUsage, tvBillingMonthYear, tvFinalPrice;
+        TextView tvCustomerName,tvUserType, tvCustomerAddress, tvElectricUsage, tvBillingMonthYear, tvFinalPrice;
         Button btnDelete, btnEdit;
 
         public CustomerViewHolder(@NonNull View itemView) {
             super(itemView);
             tvCustomerName = itemView.findViewById(R.id.tvCustomerName);
             tvCustomerAddress = itemView.findViewById(R.id.tvCustomerAddress);
+            tvUserType = itemView.findViewById(R.id.tvUserType);
             tvElectricUsage = itemView.findViewById(R.id.tvElectricUsage);
             tvBillingMonthYear = itemView.findViewById(R.id.tvBillingMonthYear);
             tvFinalPrice = itemView.findViewById(R.id.tvFinalPrice);
