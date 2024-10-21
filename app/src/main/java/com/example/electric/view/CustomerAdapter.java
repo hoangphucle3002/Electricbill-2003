@@ -16,23 +16,24 @@ import com.example.electric.R;
 import com.example.electric.model.Customer;
 import com.example.electric.model.DatabaseManage;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.text.DecimalFormat;
-
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.CustomerViewHolder> {
 
     private List<Customer> customerList;
-    private Context context;
-    private DatabaseManage dbHelper;
+    private final Context context;
+    private final DatabaseManage dbHelper;
 
+    // Constructor của adapter
     public CustomerAdapter(List<Customer> customerList, Context context, DatabaseManage dbHelper) {
         this.customerList = customerList;
         this.context = context;
         this.dbHelper = dbHelper;
     }
 
+    // Tạo ViewHolder cho RecyclerView
     @NonNull
     @Override
     public CustomerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,44 +41,45 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         return new CustomerViewHolder(view);
     }
 
+    // Bind dữ liệu khách hàng vào ViewHolder
     @Override
     public void onBindViewHolder(@NonNull CustomerViewHolder holder, int position) {
         Customer customer = customerList.get(position);
 
+        // Lấy các cài đặt hiển thị từ SharedPreferences
         SharedPreferences sharedPreferences = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
         boolean showAddress = sharedPreferences.getBoolean("showAddress", true);
         boolean showElectricUsage = sharedPreferences.getBoolean("showElectricUsage", true);
         boolean showUserType = sharedPreferences.getBoolean("showUserType", true);
         boolean showPrice = sharedPreferences.getBoolean("showPrice", true);
 
-        // Bind customer data to TextViews
+        // Hiển thị thông tin khách hàng
         holder.tvCustomerName.setText("Name: " + customer.getName());
         holder.tvCustomerAddress.setText("Address: " + customer.getAddress());
 
-        String userTypeText = customer.getUserTypeId() == 1 ? "Private" : customer.getUserTypeId() == 2 ? "Business" : "Unknown";
+        // Xác định loại người dùng (Private/Business)
+        String userTypeText = customer.getUserTypeId() == 1 ? "Private" : "Business";
         holder.tvUserType.setText("User Type: " + userTypeText);
 
-        // Format Electric Usage without .0
+        // Định dạng và hiển thị số điện đã sử dụng
         DecimalFormat dfUsage = new DecimalFormat("#,###");
         String formattedElectricUsage = dfUsage.format(customer.getElectricUsage());
         holder.tvElectricUsage.setText("Electric Usage: " + formattedElectricUsage + " kWh");
 
-        // Format Billing Month as "MM/YYYY"
+        // Định dạng và hiển thị tháng thanh toán (MM/YYYY)
         int yyyymm = customer.getYyyymm();
         int year = yyyymm / 100;
         int month = yyyymm % 100;
         String formattedBillingMonthYear = String.format("%02d/%d", month, year);
         holder.tvBillingMonthYear.setText("Billing Month: " + formattedBillingMonthYear);
 
-        // Format final price
+        // Tính và hiển thị tổng số tiền
         double finalPrice = calculateFinalPrice(customer);
-
-        // Sử dụng DecimalFormat để định dạng số tiền
         DecimalFormat dfPrice = new DecimalFormat("#,###");
         String formattedPrice = dfPrice.format(finalPrice);
         holder.tvFinalPrice.setText("Price: " + formattedPrice + " VND");
 
-        // Handle "Edit" button click
+        // Xử lý sự kiện khi nhấn nút "Edit"
         holder.btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(context, CustomerEdit.class);
             intent.putExtra("customerId", customer.getId());
@@ -86,49 +88,26 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
             intent.putExtra("electricUsage", customer.getElectricUsage());
             intent.putExtra("yyyymm", customer.getYyyymm());
             intent.putExtra("userTypeId", customer.getUserTypeId());
-            context.startActivity(intent); // Start edit activity
+            context.startActivity(intent); // Mở Activity chỉnh sửa
         });
 
-        // Handle "Delete" button click
+        // Xử lý sự kiện khi nhấn nút "Delete"
         holder.btnDelete.setOnClickListener(v -> showDeleteConfirmationDialog(customer, position));
 
-        if (showAddress) {
-            holder.tvCustomerAddress.setVisibility(View.VISIBLE);
-            holder.tvCustomerAddress.setText("Address: " + customer.getAddress());
-        } else {
-            holder.tvCustomerAddress.setVisibility(View.GONE);
-        }
-
-        if (showElectricUsage) {
-            holder.tvElectricUsage.setVisibility(View.VISIBLE);
-            holder.tvElectricUsage.setText("Electric Usage: " + formattedElectricUsage + " kWh");
-        } else {
-            holder.tvElectricUsage.setVisibility(View.GONE);
-        }
-
-        if (showUserType) {
-            holder.tvUserType.setVisibility(View.VISIBLE);
-            holder.tvUserType.setText("User Type: " + userTypeText);
-        } else {
-            holder.tvUserType.setVisibility(View.GONE);
-        }
-
-        if (showPrice) {
-            holder.tvFinalPrice.setVisibility(View.VISIBLE);
-            holder.tvFinalPrice.setText("Price: " + formattedPrice + " VND");
-        } else {
-            holder.tvFinalPrice.setVisibility(View.GONE);
-        }
+        // Hiển thị hoặc ẩn các trường thông tin dựa trên cấu hình
+        holder.tvCustomerAddress.setVisibility(showAddress ? View.VISIBLE : View.GONE);
+        holder.tvElectricUsage.setVisibility(showElectricUsage ? View.VISIBLE : View.GONE);
+        holder.tvUserType.setVisibility(showUserType ? View.VISIBLE : View.GONE);
+        holder.tvFinalPrice.setVisibility(showPrice ? View.VISIBLE : View.GONE);
     }
 
-
-
-
+    // Số lượng khách hàng trong danh sách
     @Override
     public int getItemCount() {
         return customerList.size();
     }
 
+    // Hiển thị hộp thoại xác nhận xóa khách hàng
     private void showDeleteConfirmationDialog(Customer customer, int position) {
         new AlertDialog.Builder(context)
                 .setTitle("Delete Confirmation")
@@ -138,6 +117,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
                 .show();
     }
 
+    // Xóa khách hàng khỏi cơ sở dữ liệu
     private void deleteCustomer(Customer customer, int position) {
         if (customer.getId() == 0) {
             Log.e("CustomerAdapter", "Cannot delete customer with ID: 0");
@@ -156,19 +136,21 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         }
     }
 
+    // Tính giá trị cuối cùng cho khách hàng dựa trên đơn giá và số điện sử dụng
     private double calculateFinalPrice(Customer customer) {
         double unitPrice = dbHelper.getUnitPrice(customer.getUserTypeId());
         return customer.getElectricUsage() * unitPrice;
     }
 
-    // Method to update customer list after search or changes
+    // Cập nhật danh sách khách hàng sau khi tìm kiếm hoặc thay đổi
     public void updateList(List<Customer> newCustomerList) {
         customerList = new ArrayList<>(newCustomerList);
-        notifyDataSetChanged(); // Notify RecyclerView to update data
+        notifyDataSetChanged(); // Cập nhật RecyclerView
     }
 
+    // Lớp ViewHolder chứa các thành phần giao diện của mỗi mục trong RecyclerView
     public static class CustomerViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCustomerName,tvUserType, tvCustomerAddress, tvElectricUsage, tvBillingMonthYear, tvFinalPrice;
+        TextView tvCustomerName, tvUserType, tvCustomerAddress, tvElectricUsage, tvBillingMonthYear, tvFinalPrice;
         Button btnDelete, btnEdit;
 
         public CustomerViewHolder(@NonNull View itemView) {

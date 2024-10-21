@@ -14,96 +14,111 @@ import com.example.electric.service.Music;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnAddCustomer, btnViewCustomerList, btnUpdatePrice, btnSettings, btnIncreasePrice;
+    // Khai báo các thành phần giao diện và biến cần thiết
+    private Button btnAddCustomer, btnViewCustomerList, btnSettings, btnIncreasePrice;
     private SharedPreferences sharedPreferences;
     private ViewPager2 viewPager2;
-    private Handler handler = new Handler(Looper.getMainLooper());
-    private int currentPage = 0;
-    private int[] images = {R.drawable.image1, R.drawable.image2, R.drawable.image3, R.drawable.image4, R.drawable.image5};
+    private Handler handler = new Handler(Looper.getMainLooper()); // Xử lý luồng cho auto slide
+    private int currentPage = 0; // Trang hiện tại của ViewPager
+    private final int[] images = {R.drawable.image1, R.drawable.image2, R.drawable.image3, R.drawable.image4, R.drawable.image5}; // Danh sách ảnh
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setupToolbar();
         super.onCreate(savedInstanceState);
-         setContentView(R.layout.main);
+        setContentView(R.layout.main); // Ánh xạ giao diện chính
 
-        // Initialize ViewPager2
-        viewPager2 = findViewById(R.id.viewPager2);
+        setupToolbar(); // Thiết lập thanh toolbar
+        initViewPager(); // Khởi tạo ViewPager2
+        initButtons(); // Khởi tạo các nút bấm
 
-        if (viewPager2 == null) {
-            throw new NullPointerException("ViewPager2 is not initialized. Check if you have the correct ID in the XML layout.");
-        }
-
-        // Set adapter for ViewPager2
-        ViewPagerAdapter adapter = new ViewPagerAdapter(images);
-        viewPager2.setAdapter(adapter);
-        viewPager2.setPageTransformer(new DepthPageTransformer());
-
-        // Start auto slide
-        startAutoSlide();
-
-        // Initialize buttons
-        btnAddCustomer = findViewById(R.id.btnAddCustomer);
-        btnViewCustomerList = findViewById(R.id.btnViewCustomerList);
-        btnSettings = findViewById(R.id.btnSettings);
-        btnIncreasePrice = findViewById(R.id.btnIncreasePrice);
-
-        // Set button click listeners
-        btnAddCustomer.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AddCustomer.class);
-            startActivity(intent);
-        });
-
-        btnViewCustomerList.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, CustomerList.class);
-            startActivity(intent);
-        });
-
-        btnIncreasePrice.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, UpdatePrice.class);
-            startActivity(intent);
-        });
-
+        // Kiểm tra trạng thái nhạc và khởi động nhạc nếu cần
         sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
         boolean isMusicPlaying = sharedPreferences.getBoolean("isMusicPlaying", false);
         if (isMusicPlaying) {
             startService(new Intent(MainActivity.this, Music.class));
         }
+    }
 
+    // Khởi tạo ViewPager và tự động slide
+    private void initViewPager() {
+        viewPager2 = findViewById(R.id.viewPager2); // Ánh xạ ViewPager2 từ layout
+
+        // Kiểm tra nếu ViewPager2 không được ánh xạ đúng
+        if (viewPager2 == null) {
+            throw new NullPointerException("ViewPager2 không được khởi tạo đúng cách. Kiểm tra ID trong layout XML.");
+        }
+
+        // Thiết lập adapter cho ViewPager2
+        ViewPagerAdapter adapter = new ViewPagerAdapter(images);
+        viewPager2.setAdapter(adapter);
+        viewPager2.setPageTransformer(new DepthPageTransformer()); // Thiết lập hiệu ứng chuyển trang
+
+        startAutoSlide(); // Bắt đầu tự động slide
+    }
+
+    // Khởi tạo các nút và thiết lập sự kiện click
+    private void initButtons() {
+        btnAddCustomer = findViewById(R.id.btnAddCustomer); // Ánh xạ nút thêm khách hàng
+        btnViewCustomerList = findViewById(R.id.btnViewCustomerList); // Ánh xạ nút xem danh sách khách hàng
+        btnSettings = findViewById(R.id.btnSettings); // Ánh xạ nút cài đặt
+        btnIncreasePrice = findViewById(R.id.btnIncreasePrice); // Ánh xạ nút tăng giá
+
+        // Sự kiện khi nhấn vào nút "Add Customer"
+        btnAddCustomer.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AddCustomer.class);
+            startActivity(intent); // Chuyển sang màn hình thêm khách hàng
+        });
+
+        // Sự kiện khi nhấn vào nút "View Customer List"
+        btnViewCustomerList.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CustomerList.class);
+            startActivity(intent); // Chuyển sang màn hình danh sách khách hàng
+        });
+
+        // Sự kiện khi nhấn vào nút "Increase Price"
+        btnIncreasePrice.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, UpdatePrice.class);
+            startActivity(intent); // Chuyển sang màn hình cập nhật giá điện
+        });
+
+        // Sự kiện khi nhấn vào nút "Settings"
         btnSettings.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, Settings.class);
-            startActivity(intent);
+            startActivity(intent); // Chuyển sang màn hình cài đặt
         });
     }
 
+    // Bắt đầu tự động slide hình ảnh trong ViewPager2
     private void startAutoSlide() {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 if (viewPager2.getAdapter() != null) {
                     if (currentPage == viewPager2.getAdapter().getItemCount()) {
-                        currentPage = 0;
+                        currentPage = 0; // Nếu hết trang, quay lại trang đầu tiên
                     }
-                    viewPager2.setCurrentItem(currentPage++, true);
-                    handler.postDelayed(this, 2000); // Change image every 2 seconds
+                    viewPager2.setCurrentItem(currentPage++, true); // Chuyển sang trang tiếp theo
+                    handler.postDelayed(this, 2000); // Đổi ảnh sau mỗi 2 giây
                 }
             }
         };
-
-        handler.post(runnable);
+        handler.post(runnable); // Bắt đầu tự động slide
     }
 
+    // Hủy bỏ slide khi Activity bị hủy
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null); // Stop auto slide when activity is destroyed
+        handler.removeCallbacksAndMessages(null); // Ngừng auto slide khi Activity bị hủy
     }
+
+    // Thiết lập thanh toolbar
     private void setupToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar); // Ánh xạ toolbar từ layout
+        setSupportActionBar(toolbar); // Thiết lập toolbar thành ActionBar
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Electric Management");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Hiển thị nút quay lại
+            getSupportActionBar().setTitle("Electric Management"); // Đặt tiêu đề cho toolbar
         }
     }
 }

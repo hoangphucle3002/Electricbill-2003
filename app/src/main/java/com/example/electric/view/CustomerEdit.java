@@ -2,8 +2,6 @@ package com.example.electric.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioFocusRequest;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +20,6 @@ import android.view.Gravity;
 
 import com.example.electric.R;
 import com.example.electric.model.DatabaseManage;
-import com.example.electric.service.Music;
 
 import java.util.Calendar;
 
@@ -33,27 +30,18 @@ public class CustomerEdit extends AppCompatActivity {
     private Spinner spinnerUserType;
     private Button btnSaveCustomer, btnSelectMonthYear;
     private DatabaseManage dbHelper;
-    private int customerId; // ID of the customer being edited
+    private int customerId; // ID của khách hàng đang chỉnh sửa
 
     private SharedPreferences sharedPreferences;
-    private boolean isMusicPlaying = false;
-    private AudioManager audioManager;
-    private AudioFocusRequest audioFocusRequest;
     private int selectedYear, selectedMonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_customer);
-        setupToolbar();
-        // Setup toolbar and back button
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // Enable back button
-        }
+        setupToolbar(); // Thiết lập thanh công cụ (toolbar)
 
-        // Initialize views
+        // Khởi tạo các view
         etCustomerName = findViewById(R.id.etCustomerName);
         etCustomerAddress = findViewById(R.id.etCustomerAddress);
         etElectricUsage = findViewById(R.id.etElectricUsage);
@@ -65,25 +53,17 @@ public class CustomerEdit extends AppCompatActivity {
         dbHelper = new DatabaseManage(this);
         sharedPreferences = getSharedPreferences("settings_prefs", MODE_PRIVATE);
 
-        // Music management
-        setupMusicControl();
-
-        // Get visibility preferences from SharedPreferences
+        // Lấy các tùy chọn hiển thị từ SharedPreferences
         boolean showAddress = sharedPreferences.getBoolean("show_address", true);
         boolean showElectricUsage = sharedPreferences.getBoolean("show_electric_usage", true);
         boolean showUserType = sharedPreferences.getBoolean("show_user_type", true);
 
-        if (!showAddress) {
-            etCustomerAddress.setVisibility(View.GONE);
-        }
-        if (!showElectricUsage) {
-            etElectricUsage.setVisibility(View.GONE);
-        }
-        if (!showUserType) {
-            spinnerUserType.setVisibility(View.GONE);
-        }
+        // Hiển thị hoặc ẩn các view dựa trên cấu hình
+        etCustomerAddress.setVisibility(showAddress ? View.VISIBLE : View.GONE);
+        etElectricUsage.setVisibility(showElectricUsage ? View.VISIBLE : View.GONE);
+        spinnerUserType.setVisibility(showUserType ? View.VISIBLE : View.GONE);
 
-        // Get data from Intent
+        // Lấy dữ liệu từ Intent và hiển thị lên các view
         if (getIntent() != null && getIntent().getExtras() != null) {
             customerId = getIntent().getExtras().getInt("customerId");
             String customerName = getIntent().getExtras().getString("customerName");
@@ -92,12 +72,12 @@ public class CustomerEdit extends AppCompatActivity {
             int yyyymm = getIntent().getExtras().getInt("yyyymm");
             int userTypeId = getIntent().getExtras().getInt("userTypeId");
 
-            // Set data to views
+            // Hiển thị dữ liệu lên các view
             etCustomerName.setText(customerName);
             etCustomerAddress.setText(customerAddress);
             etElectricUsage.setText(String.valueOf(electricUsage));
 
-            // Show formatted date in "Month: Year" format
+            // Hiển thị ngày tháng năm theo định dạng "Month: Year"
             int year = yyyymm / 100;
             int month = yyyymm % 100;
             String formattedDate = "Month: " + month + " Year: " + year;
@@ -106,17 +86,18 @@ public class CustomerEdit extends AppCompatActivity {
             spinnerUserType.setSelection(userTypeId == 1 ? 0 : 1);
         }
 
-        // Handle month/year picker button click
+        // Xử lý sự kiện khi người dùng chọn tháng/năm
         btnSelectMonthYear.setOnClickListener(v -> showDatePickerDialog());
 
-        // Handle save button click
+        // Xử lý sự kiện khi người dùng nhấn nút lưu khách hàng
         btnSaveCustomer.setOnClickListener(v -> {
             if (validateInput()) {
-                saveCustomer();
+                saveCustomer(); // Lưu khách hàng sau khi chỉnh sửa
             }
         });
     }
 
+    // Thiết lập toolbar
     private void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -125,95 +106,53 @@ public class CustomerEdit extends AppCompatActivity {
             getSupportActionBar().setTitle("Edit Customer");
         }
     }
-    private void setupMusicControl() {
-        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
 
-        AudioManager.OnAudioFocusChangeListener afChangeListener = focusChange -> {
-            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                // Stop music if we lose audio focus (another app playing sound)
-                stopMusic();
-            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                // Resume music when we regain audio focus
-                if (isMusicPlaying) {
-                    startMusic();
-                }
-            }
-        };
-
-        // Request audio focus for playback
-        int result = audioManager.requestAudioFocus(afChangeListener,
-                AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN);
-
-        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED && sharedPreferences.getBoolean("playMusic", false)) {
-            startMusic();
-        }
-    }
-
-    private void startMusic() {
-        Intent intent = new Intent(this, Music.class);
-        startService(intent);
-        isMusicPlaying = true;
-    }
-
-    private void stopMusic() {
-        Intent intent = new Intent(this, Music.class);
-        stopService(intent);
-        isMusicPlaying = false;
-    }
-
-    // Show month/year picker dialog with NumberPicker
+    // Hiển thị hộp thoại chọn tháng/năm với NumberPicker
     private void showDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
 
-        // Create NumberPicker for month selection
+        // Tạo NumberPicker cho tháng
         final NumberPicker monthPicker = new NumberPicker(this);
         monthPicker.setMinValue(1);
         monthPicker.setMaxValue(12);
         monthPicker.setValue(currentMonth);
 
-        // Create NumberPicker for year selection
+        // Tạo NumberPicker cho năm
         final NumberPicker yearPicker = new NumberPicker(this);
-        yearPicker.setMinValue(2000);  // Minimum year
-        yearPicker.setMaxValue(currentYear);  // Maximum year (current year)
+        yearPicker.setMinValue(2000);
+        yearPicker.setMaxValue(currentYear);
         yearPicker.setValue(currentYear);
 
-        // Create a LinearLayout to hold the two NumberPickers and center them
+        // Tạo layout để chứa NumberPickers và căn giữa
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.HORIZONTAL);
-        layout.setGravity(Gravity.CENTER); // Center the two NumberPickers
-        layout.setPadding(50, 0, 50, 0); // Add padding for balance
+        layout.setGravity(Gravity.CENTER);
+        layout.setPadding(50, 0, 50, 0);
         layout.addView(monthPicker);
 
-        // Add spacing between the two NumberPickers
+        // Thêm khoảng cách giữa 2 NumberPickers
         Space space = new Space(this);
-        space.setMinimumWidth(20); // Distance between monthPicker and yearPicker
+        space.setMinimumWidth(20);
         layout.addView(space);
 
         layout.addView(yearPicker);
 
-        // Create an AlertDialog to display the pickers
+        // Hiển thị AlertDialog chứa NumberPickers
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select Month/Year");
         builder.setView(layout);
-
-        // When the user clicks "OK"
         builder.setPositiveButton("OK", (dialog, which) -> {
             selectedMonth = monthPicker.getValue();
             selectedYear = yearPicker.getValue();
-
-            // Display the selected month and year on the TextView
             tvBillingMonthYear.setText("Month: " + selectedMonth + " Year: " + selectedYear);
         });
-
-        // When the user clicks "Cancel"
         builder.setNegativeButton("Cancel", null);
         builder.show();
     }
 
-    // Save customer details after editing
+    // Lưu thông tin khách hàng sau khi chỉnh sửa
     private void saveCustomer() {
         String name = etCustomerName.getText().toString().trim();
         String address = etCustomerAddress.getText().toString().trim();
@@ -225,25 +164,21 @@ public class CustomerEdit extends AppCompatActivity {
         int yyyymm;
         try {
             electricUsage = Double.parseDouble(usageText);
-
-            // Convert "Month: Year" format back to yyyymm integer
             String[] parts = billingMonthYearText.split(" ");
             int month = Integer.parseInt(parts[1].replace("Month:", "").trim());
             int year = Integer.parseInt(parts[3].replace("Year:", "").trim());
             yyyymm = year * 100 + month;
-
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Invalid electric usage or billing month", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Save customer to database
         dbHelper.updateCustomer(customerId, name, address, electricUsage, yyyymm, userTypeId);
         Toast.makeText(this, "Customer updated successfully", Toast.LENGTH_SHORT).show();
         finish();
     }
 
-    // Validate input fields
+    // Xác thực các trường nhập liệu
     private boolean validateInput() {
         String name = etCustomerName.getText().toString().trim();
         String address = etCustomerAddress.getText().toString().trim();
@@ -280,6 +215,7 @@ public class CustomerEdit extends AppCompatActivity {
         return true;
     }
 
+    // Xử lý sự kiện nhấn nút back trên toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

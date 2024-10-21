@@ -13,78 +13,88 @@ import com.example.electric.service.Music;
 
 public class Settings extends AppCompatActivity {
 
+    // Khai báo các thành phần giao diện
     private Switch switchShowAddress, switchShowElectricUsage, switchShowUserType, switchShowPrice, switchMusic;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences; // Để lưu trữ trạng thái của các switch
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings);
+        setContentView(R.layout.settings); // Ánh xạ giao diện "settings"
 
-        // Initialize Toolbar and add back button
+        setupToolbar(); // Thiết lập Toolbar
+        bindViews(); // Ánh xạ các Switch từ giao diện
+        setupSharedPreferences(); // Khởi tạo và lấy trạng thái từ SharedPreferences
+        setupSwitchListeners(); // Thiết lập các sự kiện thay đổi cho Switch
+    }
+
+    // Phương thức thiết lập Toolbar với nút quay lại
+    private void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Settings");
+            getSupportActionBar().setTitle("Settings"); // Đặt tiêu đề cho Toolbar
         }
+    }
 
-        // Bind switches to layout
+    // Ánh xạ các thành phần giao diện (Switch)
+    private void bindViews() {
         switchShowAddress = findViewById(R.id.switchShowAddress);
         switchShowElectricUsage = findViewById(R.id.switchShowElectricUsage);
         switchShowUserType = findViewById(R.id.switchShowUserType);
         switchShowPrice = findViewById(R.id.switchShowPrice);
         switchMusic = findViewById(R.id.switchPlayMusic);
+    }
 
-        // Get SharedPreferences to store switch states
+    // Thiết lập SharedPreferences để lưu và khôi phục trạng thái của các switch
+    private void setupSharedPreferences() {
         sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
 
-        // Restore switch states from SharedPreferences
+        // Khôi phục trạng thái của switch từ SharedPreferences
         switchShowAddress.setChecked(sharedPreferences.getBoolean("showAddress", true));
         switchShowElectricUsage.setChecked(sharedPreferences.getBoolean("showElectricUsage", true));
         switchShowUserType.setChecked(sharedPreferences.getBoolean("showUserType", true));
         switchShowPrice.setChecked(sharedPreferences.getBoolean("showPrice", true));
         switchMusic.setChecked(sharedPreferences.getBoolean("playMusic", false));
+    }
 
-        // Save switch state when user changes it
-        switchShowAddress.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sharedPreferences.edit().putBoolean("showAddress", isChecked).apply();
-        });
+    // Thiết lập các sự kiện khi người dùng thay đổi trạng thái của switch
+    private void setupSwitchListeners() {
+        // Lưu trạng thái của switch vào SharedPreferences khi thay đổi
+        switchShowAddress.setOnCheckedChangeListener((buttonView, isChecked) ->
+                sharedPreferences.edit().putBoolean("showAddress", isChecked).apply());
 
-        switchShowElectricUsage.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sharedPreferences.edit().putBoolean("showElectricUsage", isChecked).apply();
-        });
+        switchShowElectricUsage.setOnCheckedChangeListener((buttonView, isChecked) ->
+                sharedPreferences.edit().putBoolean("showElectricUsage", isChecked).apply());
 
-        switchShowUserType.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sharedPreferences.edit().putBoolean("showUserType", isChecked).apply();
-        });
+        switchShowUserType.setOnCheckedChangeListener((buttonView, isChecked) ->
+                sharedPreferences.edit().putBoolean("showUserType", isChecked).apply());
 
-        switchShowPrice.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sharedPreferences.edit().putBoolean("showPrice", isChecked).apply();
-        });
+        switchShowPrice.setOnCheckedChangeListener((buttonView, isChecked) ->
+                sharedPreferences.edit().putBoolean("showPrice", isChecked).apply());
 
-        // Handle music on/off switch
+        // Bật/tắt nhạc khi switchMusic thay đổi
         switchMusic.setOnCheckedChangeListener((buttonView, isChecked) -> {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("playMusic", isChecked);
             editor.apply();
 
+            // Nếu bật, bắt đầu phát nhạc
             if (isChecked) {
-                // Start playing music
-                Intent intent = new Intent(Settings.this, Music.class);
-                startService(intent);
+                startService(new Intent(Settings.this, Music.class));
             } else {
-                // Stop playing music
-                Intent intent = new Intent(Settings.this, Music.class);
-                stopService(intent);
+                // Nếu tắt, dừng nhạc
+                stopService(new Intent(Settings.this, Music.class));
             }
         });
     }
 
+    // Xử lý sự kiện khi người dùng nhấn vào nút "Back"
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed(); // Handle back button press
+            onBackPressed(); // Quay lại màn hình trước đó
             return true;
         }
         return super.onOptionsItemSelected(item);
