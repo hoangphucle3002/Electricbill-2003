@@ -112,13 +112,5 @@ public class MainActivity extends AppCompatActivity {
         handler.removeCallbacksAndMessages(null); // Ngừng auto slide khi Activity bị hủy
     }
 
-    // Thiết lập thanh toolbar
-    private void setupToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar); // Ánh xạ toolbar từ layout
-        setSupportActionBar(toolbar); // Thiết lập toolbar thành ActionBar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Hiển thị nút quay lại
-            getSupportActionBar().setTitle("Electric Management"); // Đặt tiêu đề cho toolbar
-        }
-    }
+  
 }
